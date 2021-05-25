@@ -1,0 +1,165 @@
+﻿<!--<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link href="etel.css" rel="stylesheet" />
+    <script src="etel.js"></script>
+    <title></title>
+</head>
+<body>
+    <form>
+        <div id="etelList"></div>
+        <div>
+            <input id="etelText" type="text" placeholder="Etel cím" />
+        </div>
+        <button id="addButton" type="button" onclick="Get()">Új étel felvétele</button>
+        <div id="OsszesEtel">
+            <div id="darabszam"></div>
+            <h2>Ételek:</h2>
+            <ul id="EtelLista"></ul>
+        </div>
+        <div id="EtelTorles">
+            <input id="etelID" type="text" placeholder="Törlendő Etel ID" />
+            <button id="DeleteButton" type="button" onclick="Delete()">Etel törlése</button>
+        </div>
+    </form>
+
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link href="etel.css" rel="stylesheet" />
+    <script src="etel.js"></script>
+    <title>Ételek</title>
+</head>
+<body>
+    <form>
+        <div>
+            <h1>Ételek</h1>
+        </div>
+        <div>
+            <input id="etelText" type="text" placeholder="Hozzáadandó Étel " />
+            <button id="addButton">Új étel felvétele</button>
+        </div>
+        <div>
+            <input id="torlendo" type="number" placeholder="Törlendő Étel " />
+            <button id="removeButton" onclick="torles()">Meglévő étel törlése</button>
+
+        </div>
+        <div id="etelList"></div>
+        <p>Meg csináltam a megszámolós feladatot is, ami simán counttal összeszámolja, és a lekérdezőset is. A hozzáadást jól megírtam, de néha nem adja hozzá, olyankor többször kell lenyomni</p>
+
+    </form>
+    <script>
+        function EtelBetoltes() {
+            fetch('api/etelek')
+                .then(result => {
+                    if (!result.ok) {
+                        console.error('Hibás letöltés: ${result.status}');
+                        return null;
+                    }
+                    else {
+                        return result.json();
+                    }
+                })
+                .then(data => {
+                    for (var i = 0; i < data.length; i++) {
+                        document.getElementById("etelList").innerHTML += data[i].étel += "<br/>"
+                    }
+                })
+        }
+        window.onload = () => {
+            EtelBetoltes();
+        }
+        document.getElementById("addButton").addEventListener("click", () => {
+            let data = {
+                Étel: document.getElementById("etelText").value
+            }
+
+            fetch("api/etelek",
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }
+            ).then(x => {
+                if (x.ok) {
+                    alert("Siker!");
+                } else {
+                    alert("Kudarc!");
+                }
+            });
+        });
+        function torles() {
+
+                let id=parseInt(document.getElementById('torlendo').value)
+            
+
+                fetch("api/etelek/" + id,
+                {
+                    method: 'DELETE',
+                    headers:
+                    {
+                        'Content-Type': 'application/json'
+            },
+                    body: JSON.stringify(id)
+        }).then(x => {
+            if (x.ok) {
+
+                alert("Siker");
+
+            }
+            else {
+                alert("Kudarc");
+            }
+            location.reload();
+        });
+}
+    </script>
+</body>
+</html>
+﻿
+<!--<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <form action="/" method="post">
+        <div id="etelList"></div>
+        <div>
+            <input id="etelText" type="text" placeholder="Étel neve" />
+        </div>
+        <button id="addButton">Új étel felvétele</button>
+    </form>
+    <script>
+        document.getElementById("addButton").addEventListener("click", () => {
+            let data = {
+                text: document.getElementById("etelText").value
+            }
+
+            fetch("api/etel",
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }
+            ).then(x => {
+                if (x.ok) {
+                    alert("Siker!");
+                } else {
+                    alert("Kudarc!");
+                }
+            });
+        });
+    </script>
+</body>
+</html>-->
